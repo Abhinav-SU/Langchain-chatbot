@@ -1,5 +1,6 @@
 import dotenv
 from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import(
     PromptTemplate,
     SystemMessagePromptTemplate,
@@ -43,5 +44,7 @@ review_prompt_template =ChatPromptTemplate(
 
 chat_model = ChatOpenAI(model="gpt-3.5-turbo-0125",temperature=0)
 
+output_parser =StrOutputParser()
 
-review_chain = review_prompt_template | chat_model
+review_chain = review_prompt_template | chat_model | output_parser
+
