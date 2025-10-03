@@ -1,6 +1,9 @@
 import dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
+from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
+from langchain.schema.runnable import RunnablePassthrough
 from langchain.prompts import(
     PromptTemplate,
     SystemMessagePromptTemplate,
@@ -9,6 +12,8 @@ from langchain.prompts import(
 )
 
 dotenv.load_dotenv()
+
+REVIEWS_CHROMA_PATH = "chroma_data/"
 
 review_template_str = """Your job is to use patient reviews to answer 
 question about their expeience at a hospital.
@@ -46,5 +51,19 @@ chat_model = ChatOpenAI(model="gpt-3.5-turbo-0125",temperature=0)
 
 output_parser =StrOutputParser()
 
-review_chain = review_prompt_template | chat_model | output_parser
+reviews_vector_db = Chroma(
+    persist_directory =REVIEWS_CHROMA_PATH,
+    embedding_function=OpenAIEmbeddings()
+)
 
+reviews_retriever  = reviews_vector_db.as_retriever(k=10)
+
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
+review_chain = (
+                {"context": reviews_retriever | format_docs, "question": RunnablePassthrough()}
+                | review_prompt_template
+                | chat_model 
+                | output_parser
+                )

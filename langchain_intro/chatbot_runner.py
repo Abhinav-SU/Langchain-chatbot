@@ -1,8 +1,8 @@
 from chatbot import review_chain
 
-context = "I had a great stay!"
-question = "Did anyone have a positive experience"
 
-result = review_chain.invoke({"context":context,"question":question})
+question = """Has anyone complained about communication with the hospital staff?"""
+
+result = review_chain.invoke({"question": question})
 
 print(result)
