@@ -170,6 +170,12 @@ data/
 models/
 checkpoints/
 
+# Vector databases and embeddings
+chroma_data/
+*.chroma
+*.sqlite3
+*.faiss
+
 # Logs
 logs/
 *.log
