@@ -173,3 +173,7 @@ checkpoints/
 # Logs
 logs/
 *.log
+
+# Local beginner tutorial files (for reference only, not tracked)
+beginner_*.py
+BEGINNER_GUIDE.md
